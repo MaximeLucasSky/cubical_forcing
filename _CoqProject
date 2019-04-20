@@ -1,0 +1,21 @@
+-R cubical/ Cubical
+-R forcing/ Forcing
+-R metacoq/template-coq/theories/ Template
+-R metacoq/translations Translations
+-I metacoq/template-coq/src
+
+forcing/translation_utils_bis.v
+forcing/TFUtils.v
+forcing/TemplateForcing.v
+
+cubical/Axioms.v
+cubical/BasicsMisc.v
+cubical/Hott_lemmas.v
+cubical/Simple_arithmetic.v
+
+cubical/Cubes.v
+cubical/Monotonicity.v
+cubical/Cartesian.v
+
+cubical/Forcing_I.v
+cubical/Forcing_F.v
