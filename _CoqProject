@@ -1,8 +1,9 @@
 -R cubical/ Cubical
 -R forcing/ Forcing
--R metacoq/template-coq/theories/ Template
--R metacoq/translations Translations
--I metacoq/template-coq/src
+-R ../metacoq/template-coq/theories/ Template
+-R ../metacoq/translations Translations
+-I ../metacoq/template-coq/src
+-arg -type-in-type
 
 forcing/translation_utils_bis.v
 forcing/TFUtils.v
