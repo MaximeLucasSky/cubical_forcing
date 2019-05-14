@@ -30,6 +30,7 @@ Require Import Cartesian.
 
 
 
+
 (** Check that category laws are definitional *)
 
 Theorem compose_assoc {A B C D : nat}

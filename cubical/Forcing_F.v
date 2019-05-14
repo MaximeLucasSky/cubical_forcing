@@ -1803,6 +1803,7 @@ Defined.
 Run TemplateProgram (tImplementTC Fand_natf_TC "Fforall_TC" "Fforall" ((I -> F) -> F)).
 Next Obligation.
   specialize (X p id). apply forall_faces. intro k. apply X. intros. unfold Iᵗ, Forcing_I.Iᵗ_obligation_1. exact (α ô k).
+  exact (forall_faces (fun (k : 1 ~> p) => X p id (fun p0 (α : p ~> p0) => α ô k))).
 Defined.
  
 
@@ -1854,7 +1855,7 @@ Admitted.
 (* Next Obligation. *)
 (*   specialize (X p id). apply forall_faces. intro k. apply X. intros. unfold Jᵗ. unshelve refine (existTᵗ _ _ _ _ _). *)
 (*   - intros. exact (α0 ô α ô k). *)
-(*   -  intros.  unfold natiᵗ, natiᵗ_obligation_1. intros. reflexivity. *)
+(*   -  intros.  unfold natiᵗ. unfold Forcing_I.natiᵗ_obligation_1. intros. reflexivity. *)
 (* Defined. *)
  
 
@@ -1874,7 +1875,7 @@ Admitted.
 (*                natiᵗ p (fun (p0 : nat) (α1 : p ~> p0) => i p0 (α1 ô id))) (fun (p2 : nat) (α0 : p1 ~> p2) => α0 ô α ô x p0 id) *)
 (*               (fun (p2 : nat) (α0 : p1 ~> p2) (p3 : nat) (α1 : p2 ~> p3) => eq_refl)) = (fun (p1 : nat) (α0 : p0 ~> p1) => i p1 (α0 ô id))). *)
 (*     { apply funext_dep. intro p1. apply funext_dep. intro α1. simpl_comp. *)
-(*       unfold natjᵗ, natjᵗ_obligation_1 in H0. specialize (H0 p0 id p1 α1). simpl_comp_hyp. rewrite H0.  *)
+(*       unfold natjᵗ, natjᵗ_obligation_1 in H0. specialize (H0 p0 id p1 α1). simpl_comp_hyp. rewrite H0. *)
 (*       unshelve refine (dep_eq _ _ _ _ _ _). *)
 (*       +  apply funext_dep. intro p2. apply funext_dep. intro α0. rewrite <- Heqip0. unfold natiᵗ, natiᵗ_obligation_1 in n. *)
 (*          clear Heqip0. *)

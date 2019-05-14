@@ -20,3 +20,5 @@ cubical/Cartesian.v
 
 cubical/Forcing_I.v
 cubical/Forcing_F.v
+cubical/Forcing_F_bool.v
+cubical/Forcing_F_dec.v

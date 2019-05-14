@@ -803,29 +803,11 @@ Lemma test f1 f2 : join_faces f1 f2 = f1 \/ join_faces f1 f2 = f2.
   right. reflexivity.
 Defined.
 
-Run TemplateProgram (tImplementTC For_natf_TC "test_or_TC" "F0" (forall (f1 f2 : F), natf f1 -> natf f2 -> (For f1 f2 = f1 \/ For f1 f2 = f2))) .
-Next Obligation.
-  unfold Forᵗ, Forᵗ_obligation_1. simpl_comp.
-  remember (f1 p id) as f1p. destruct f1p.
-  - left. intros. apply eq_is_eq.
-    apply funext_dep. intro p1.
-    apply funext_dep. intro α0. simpl_comp.
-    unfold natfᵗ, natfᵗ_obligation_1 in H. simpl_comp_hyp.
-    remember (f1 p1 (α0 ô α)) as f1p1.
-    specialize (H p id p1 (α0 ô α)). simpl_comp_hyp. apply restrict_covering in H.  unfold covering in H. rewrite <- Heqf1p1 in H.
-    destruct f1p1.
-    + reflexivity.
-    + inversion H.
-    + rewrite <- Heqf1p. reflexivity.
-  - right. intros. apply eq_is_eq.
-    apply funext_dep. intro p1.
-    apply funext_dep. intro α0. simpl_comp. (* can't say anything about f p1.... *)
-Abort.                 
   
-(* Run TemplateProgram (tImplementTC For_natf_TC "Fand_TC" "Fand" (F -> F -> F)). *)
-(* Next Obligation. *)
-(*   exact (meet_faces (X p id) (X0 p id)). *)
-(* Defined. *)
+Run TemplateProgram (tImplementTC For_natf_TC "Fand_TC" "Fand" (F -> F -> F)).
+Next Obligation.
+  exact (meet_faces (X p id) (X0 p id)).
+Defined.
 
 Run TemplateProgram (tImplementTC Fand_TC "Fand_correct_TC" "Fand_correct" (forall f g : F, realize (Fand f g) <-> realize f /\ realize g)).
 Next Obligation.
@@ -963,330 +945,330 @@ Defined.
 
  
 
-Run TemplateProgram (tImplementTC realize_G_TC "Fforall_correct_TC" "Forall_correct"
-                                  (forall f : J -> G, realize_G (Fforall_JG f) <-> forall i : J, realize_G (f i))).
-Next Obligation.
-  split.
-  - intros.
-    unfold realize_Gᵗ, realize_Gᵗ_obligation_1 in *. simpl_comp.
-    specialize (H p0 id). simpl_comp_hyp. unfold Fforall_JGᵗ, Fforall_JGᵗ_obligation_1 in H.
-    rewrite forall_faces_covering in H. simpl_comp_hyp.
-    remember (i p0 id) as ip0.
-    destruct ip0. specialize (H (x p0 id)).
-    match goal with
-    | H : covering match f p0 α ?arg1 with | _ => _ end |-
-      match f p0 α ?arg2 with | _ => _ end => assert (arg1 = arg2)
-    end.
-    { apply funext_dep. intro p1. apply funext_dep. intro α1. simpl_comp.
-      unfold natjᵗ, Forcing_I.natjᵗ_obligation_1 in H0. specialize (H0 p0 id p1 α1). simpl_comp_hyp. rewrite H0.
-      unshelve refine (dep_eq _ _ _ _ _ _).
-      +  apply funext_dep. intro p2. apply funext_dep. intro α0. rewrite <- Heqip0. unfold natiᵗ, Forcing_I.natiᵗ_obligation_1 in n.
-         clear Heqip0.
-         specialize (n _ id _ α1). simpl_comp_hyp. rewrite <- n. reflexivity.
-      + simpl.  apply funext_dep. intro p2. apply funext_dep. intro α0.
-        rewrite <- Heqip0. simpl. apply funext_dep. intro p3. apply funext_dep. intro α2.
-        generalize (n p0 id p1 α1). intro e. simpl_comp_hyp. destruct e. simpl.
-        match goal with
-        | |- transport _ ?e _ _ _ _ _ = _ => assert (e = eq_refl)
-        end.
-        {
-          match goal with
-          | |- funext_dep _ _ (fun p4 => @?e p4 ) = eq_refl => assert ((fun p4 => e p4) = (fun p4 => eq_refl))
-          end.
-          { apply funext_dep. intro p4. apply funext_dep_refl. }
-          rewrite H1. apply funext_dep_refl. }
-        rewrite H1. simpl. reflexivity. }
-    destruct H1.
-    match goal with
-    | |- context [f p0 α ?arg] => destruct (f p0 α arg)
-    end.
-    exact H.
-  - intros. unfold realize_Gᵗ, realize_Gᵗ_obligation_1 in *. simpl_comp. simpl_comp_hyp.
-    unfold Fforall_JGᵗ, Fforall_JGᵗ_obligation_1. rewrite forall_faces_covering.
-    intro i. specialize (H p0 id). simpl_comp_hyp. simpl_comp.
-    match goal with
-    | |- context [f p0 α (fun p1 X0 => @?arg p1 X0)] => specialize (H arg)
-    end.
-    match goal with
-    | H : ?t -> _  |- _ => assert t
-    end.
-    {
-      intros. unfold natjᵗ, Forcing_I.natjᵗ_obligation_1.
-      intros. reflexivity. }
-    specialize (H H0). clear H0. simpl_comp_hyp. simpl in H. simpl_comp_hyp.
-    match goal with
-    | H : match f p0 α ?arg1 with | _ => _ end |-
-      covering match f p0 α ?arg2 with | _ => _ end => assert (arg1 = arg2)
-    end.
-    {
-      repeat (apply funext_dep; intro). simpl_comp. reflexivity.
-    } destruct H0.
-    match goal with
-    | |- context [f p0 α ?arg] => destruct (f p0 α arg)
-    end.
-    exact H.
-Defined.
+(* Run TemplateProgram (tImplementTC realize_G_TC "Fforall_correct_TC" "Forall_correct" *)
+(*                                   (forall f : J -> G, realize_G (Fforall_JG f) <-> forall i : J, realize_G (f i))). *)
+(* Next Obligation. *)
+(*   split. *)
+(*   - intros. *)
+(*     unfold realize_Gᵗ, realize_Gᵗ_obligation_1 in *. simpl_comp. *)
+(*     specialize (H p0 id). simpl_comp_hyp. unfold Fforall_JGᵗ, Fforall_JGᵗ_obligation_1 in H. *)
+(*     rewrite forall_faces_covering in H. simpl_comp_hyp. *)
+(*     remember (i p0 id) as ip0. *)
+(*     destruct ip0. specialize (H (x p0 id)). *)
+(*     match goal with *)
+(*     | H : covering match f p0 α ?arg1 with | _ => _ end |- *)
+(*       match f p0 α ?arg2 with | _ => _ end => assert (arg1 = arg2) *)
+(*     end. *)
+(*     { apply funext_dep. intro p1. apply funext_dep. intro α1. simpl_comp. *)
+(*       unfold natjᵗ, Forcing_I.natjᵗ_obligation_1 in H0. specialize (H0 p0 id p1 α1). simpl_comp_hyp. rewrite H0. *)
+(*       unshelve refine (dep_eq _ _ _ _ _ _). *)
+(*       +  apply funext_dep. intro p2. apply funext_dep. intro α0. rewrite <- Heqip0. unfold natiᵗ, Forcing_I.natiᵗ_obligation_1 in n. *)
+(*          clear Heqip0. *)
+(*          specialize (n _ id _ α1). simpl_comp_hyp. rewrite <- n. reflexivity. *)
+(*       + simpl.  apply funext_dep. intro p2. apply funext_dep. intro α0. *)
+(*         rewrite <- Heqip0. simpl. apply funext_dep. intro p3. apply funext_dep. intro α2. *)
+(*         generalize (n p0 id p1 α1). intro e. simpl_comp_hyp. destruct e. simpl. *)
+(*         match goal with *)
+(*         | |- transport _ ?e _ _ _ _ _ = _ => assert (e = eq_refl) *)
+(*         end. *)
+(*         { *)
+(*           match goal with *)
+(*           | |- funext_dep _ _ (fun p4 => @?e p4 ) = eq_refl => assert ((fun p4 => e p4) = (fun p4 => eq_refl)) *)
+(*           end. *)
+(*           { apply funext_dep. intro p4. apply funext_dep_refl. } *)
+(*           rewrite H1. apply funext_dep_refl. } *)
+(*         rewrite H1. simpl. reflexivity. } *)
+(*     destruct H1. *)
+(*     match goal with *)
+(*     | |- context [f p0 α ?arg] => destruct (f p0 α arg) *)
+(*     end. *)
+(*     exact H. *)
+(*   - intros. unfold realize_Gᵗ, realize_Gᵗ_obligation_1 in *. simpl_comp. simpl_comp_hyp. *)
+(*     unfold Fforall_JGᵗ, Fforall_JGᵗ_obligation_1. rewrite forall_faces_covering. *)
+(*     intro i. specialize (H p0 id). simpl_comp_hyp. simpl_comp. *)
+(*     match goal with *)
+(*     | |- context [f p0 α (fun p1 X0 => @?arg p1 X0)] => specialize (H arg) *)
+(*     end. *)
+(*     match goal with *)
+(*     | H : ?t -> _  |- _ => assert t *)
+(*     end. *)
+(*     { *)
+(*       intros. unfold natjᵗ, Forcing_I.natjᵗ_obligation_1. *)
+(*       intros. reflexivity. } *)
+(*     specialize (H H0). clear H0. simpl_comp_hyp. simpl in H. simpl_comp_hyp. *)
+(*     match goal with *)
+(*     | H : match f p0 α ?arg1 with | _ => _ end |- *)
+(*       covering match f p0 α ?arg2 with | _ => _ end => assert (arg1 = arg2) *)
+(*     end. *)
+(*     { *)
+(*       repeat (apply funext_dep; intro). simpl_comp. reflexivity. *)
+(*     } destruct H0. *)
+(*     match goal with *)
+(*     | |- context [f p0 α ?arg] => destruct (f p0 α arg) *)
+(*     end. *)
+(*     exact H. *)
+(* Defined. *)
       
                          
 
-(* Run TemplateProgram (tImplementTC ax5_TC "ax6_TC" "ax6" (forall ϕ ψ : Prop, cof ϕ -> cof ψ -> cof (ϕ /\ ψ))). *)
+(* (* Run TemplateProgram (tImplementTC ax5_TC "ax6_TC" "ax6" (forall ϕ ψ : Prop, cof ϕ -> cof ψ -> cof (ϕ /\ ψ))). *) *)
+(* (* Next Obligation. *) *)
+
+
+(* (* (* unshelve refine (ex_intro _ _ _). specialize (H p id). specialize (H0 p id).  *) *) *)
+(* (*   (* - intros p0 α0. unfold cofᵗ in H, H0. unfold cofᵗ_obligation_1 in H, H0. simpl_comp_hyp. *) *) *)
+(* (* Admitted. *) *)
+
+
+
+
+(* Definition isEquiv (A B : Type) : Type := *)
+(*   Σ (f : A -> B) (g : B -> A), (f o g = fun x => x) /\ (g o f = fun x => x). *)
+
+(* Notation "A ≅ B" := (isEquiv A B) (at level 65, left associativity). *)
+
+(* Run TemplateProgram (TC1 <-  Translate Fforall_correct_TC "fcompose" ;; *)
+(*                           TC2 <-  Translate TC1 "isEquiv" ;; *)
+(*                          tmDefinition "isEq_TC" TC2). *)
+
+(* Definition projEq1' {p : nat} *)
+(*            {A B : forall p0 : nat, p ~> p0 -> (fun (p1 : nat) (_ : p0 ~> p1) => forall p2 : nat, p1 ~> p2 -> Type) p0 id} *)
+(*   : isEquivᵗ p A B p id -> *)
+(*     (forall (p0 : nat) (α : p ~> p0), *)
+(*         (forall (p1 : nat) (α0 : p0 ~> p1), *)
+(*             A p1 (α0 ô α) p1 id) -> B p0 α p0 id *)
+(*     ). *)
+(*   intros [x _]. exact x. *)
+(* Defined. *)
+
+(* Definition projEq2' {p : nat} {A : forall p0 : nat, p ~> p0 -> (fun (p1 : nat) (_ : p0 ~> p1) => forall p2 : nat, p1 ~> p2 -> Type) p0 id} *)
+(*            {B : forall p0 : nat, p ~> p0 -> (fun (p1 : nat) (_ : p0 ~> p1) => forall p2 : nat, p1 ~> p2 -> Type) p0 id} *)
+(*   : isEquivᵗ p A B p id -> (forall (p0 : nat) (α : p ~> p0), *)
+(*                               (forall (p1 : nat) (α0 : p0 ~> p1), B p1 (α0 ô α) p1 id) -> *)
+(*                               A p0 α p0 id). *)
+(*   intros [x y]. destruct (y p id) as [z _]. exact z. *)
+(* Defined. *)
+
+(* Definition projEq3' {p : nat} {A : forall p0 : nat, p ~> p0 -> (fun (p1 : nat) (_ : p0 ~> p1) => forall p2 : nat, p1 ~> p2 -> Type) p0 id} *)
+(*            {B : forall p0 : nat, p ~> p0 -> (fun (p1 : nat) (_ : p0 ~> p1) => forall p2 : nat, p1 ~> p2 -> Type) p0 id} *)
+(*            (ie : isEquivᵗ p A B p id) *)
+(*            : (forall (p0 : 𝐂_obj) (α : p ~> p0), *)
+(*                  eqᵗ p0 *)
+(*                      (fun (p1 : nat) (α0 : p0 ~> p1) (p2 : nat) (α1 : p1 ~> p2) => *)
+(*                         (forall (p3 : nat) (α2 : p2 ~> p3), *)
+(*                             B p3 (α2 ô α1 ô α0 ô α) p3 id) -> *)
+(*                         B p2 (α1 ô α0 ô α) p2 id) *)
+(*                      (fun (p1 : nat) (α0 : p0 ~> p1) => *)
+(*                         fcomposeᵗ p1 *)
+(*                                   (fun (p2 : nat) (α1 : p1 ~> p2) => *)
+(*                                      B p2 (α1 ô α0 ô α)) *)
+(*                                   (fun (p2 : nat) (α1 : p1 ~> p2) => *)
+(*                                      A p2 (α1 ô α0 ô α)) *)
+(*                                   (fun (p2 : nat) (α1 : p1 ~> p2) => *)
+(*                                      B p2 (α1 ô α0 ô α)) *)
+(*                                   (fun (p2 : nat) (α1 : p1 ~> p2) => projEq1' ie p2 (α1 ô α0 ô α)) *)
+(*                                   (fun (p2 : nat) (α1 : p1 ~> p2) => projEq2' ie p2 (α1 ô α0 ô α))) *)
+(*                      (fun (p1 : nat) (α0 : p0 ~> p1) *)
+(*                         (x : forall (p2 : nat) (α1 : p1 ~> p2), *)
+(*                             B p2 (α1 ô α0 ô α) p2 id) => *)
+(*                         x p1 id)). *)
+(*   destruct ie as [x y]. simpl. *)
+(*   destruct (y p id) as [z t]. destruct (t p id) as [a b]. *)
+(*   exact a. *)
+(* Defined. *)
+
+(* Definition projEq4' {p : nat} {A : forall p0 : nat, p ~> p0 -> (fun (p1 : nat) (_ : p0 ~> p1) => forall p2 : nat, p1 ~> p2 -> Type) p0 id} *)
+(*            {B : forall p0 : nat, p ~> p0 -> (fun (p1 : nat) (_ : p0 ~> p1) => forall p2 : nat, p1 ~> p2 -> Type) p0 id} *)
+(*            (ie : isEquivᵗ p A B p id) *)
+(*            : (forall (p0 : 𝐂_obj) (α : p ~> p0), *)
+(*                  eqᵗ p0 *)
+(*                      (fun (p1 : nat) (α0 : p0 ~> p1) (p2 : nat) (α1 : p1 ~> p2) => *)
+(*                         (forall (p3 : nat) (α2 : p2 ~> p3), *)
+(*                             A p3 (α2 ô α1 ô α0 ô α) p3 id) -> *)
+(*                         A p2 (α1 ô α0 ô α) p2 id) *)
+(*                      (fun (p1 : nat) (α0 : p0 ~> p1) => *)
+(*                         fcomposeᵗ p1 *)
+(*                                   (fun (p2 : nat) (α1 : p1 ~> p2) => *)
+(*                                      A p2 (α1 ô α0 ô α)) *)
+(*                                   (fun (p2 : nat) (α1 : p1 ~> p2) => *)
+(*                                      B p2 (α1 ô α0 ô α)) *)
+(*                                   (fun (p2 : nat) (α1 : p1 ~> p2) => *)
+(*                                      A p2 (α1 ô α0 ô α)) *)
+(*                                   (fun (p2 : nat) (α1 : p1 ~> p2) => projEq2' ie p2 (α1 ô α0 ô α)) *)
+(*                                   (fun (p2 : nat) (α1 : p1 ~> p2) => projEq1' ie p2 (α1 ô α0 ô α))) *)
+(*                      (fun (p1 : nat) (α0 : p0 ~> p1) *)
+(*                         (x : forall (p2 : nat) (α1 : p1 ~> p2), *)
+(*                             A p2 (α1 ô α0 ô α) p2 id) => *)
+(*                         x p1 id)). *)
+(*   destruct ie as [x y]. simpl. destruct (y p id) as [z t]. destruct (t p id) as [a b]. exact b. *)
+(* Defined. *)
+
+(* Definition covering_dec {p : nat} (f : face_lattice p) : {covering f} + {~ covering f}. *)
+(* Proof. *)
+(*   destruct f. *)
+(*   -  left. easy. *)
+(*   - right. easy. *)
+(* Defined. *)
+
+(* Theorem covering_assumption {p : nat} {f : face_lattice p} (c : covering f) : covering_dec f = left c. *)
+(* Proof. *)
+(*   unfold covering_dec. destruct f. *)
+(*   - apply f_equal. apply proof_irr. *)
+(*   - inversion c.  *)
+(* Qed. *)
+
+(* Theorem noncovering_assumption {p : nat} {f : face_lattice p} (c : ~ covering f) : covering_dec f = right c. *)
+(* Proof. *)
+(*   unfold covering_dec. destruct f. *)
+(*   - assert (False). apply c. easy. inversion H. *)
+(*   - apply f_equal. apply proof_irr. *)
+(* Qed. *)
+
+
+
+(* Run TemplateProgram (tImplementTC isEq_TC "ax9_TC" "ax9" *)
+(*                                   (forall (f : F) (Hf : natf f) *)
+(*                                      (A : covers f -> Type) (B : Type) (s : forall u : (covers f), A u ≅ B), *)
+(*                                       Σ (B' : Type) (s' : B' ≅ B), (forall u : (covers f), A u = B'))). *)
 (* Next Obligation. *)
+(*   unfold Fᵗ in f. unfold Fᵗ_obligation_1 in f. *)
+(*   unshelve refine (existTᵗ _ _ _ _ _). *)
+(*   (* Define B' *) *)
+(*   - intros p0 α0 p1 α1. *)
+(*     refine (sumbool_rect (fun X => _) _ _ (covering_dec (f p0 α0))) ; intro c. *)
+(*     + eapply (A p0 α0). *)
+(*       * intros p2 α2. unfold coversᵗ. unfold coversᵗ_obligation_1. *)
+(*         simpl_comp. *)
+(*         eapply restrict_covering. *)
+(*         -- specialize (Hf p0 α0 p2 α2). exact Hf. *)
+(*         -- exact c. *)
+(*       * exact α1. *)
+(*     + exact (B p0 α0 p1 α1). *)
+(*   - intros p0 α0. unshelve refine (existTᵗ _ _ _ _ _). *)
+(*     (* Prove B ≅ B' *) *)
+(*     + intros p1 α1. unfold isEquivᵗ. unshelve refine (existTᵗ _ _ _ _ _). *)
+(*       (* First direction of equivalence *) *)
+(*       * intros p2 α2 HB'. *)
+(*         refine (sumbool_rect (fun X => _) _ _ (covering_dec (f p2 (α2 ô α1 ô α0)))) ; intro c. *)
+(*         -- specialize (s p2 (α2 ô α1 ô α0)). *)
+(*            assert (forall (p3 : nat) (α3 : p2 ~> p3), *)
+(*                       coversᵗ p3 (fun (p4 : nat) (α4 : p3 ~> p4) => f p4 (α4 ô α3 ô α2 ô α1 ô α0)) p3 id) as Hc'. *)
+(*            { intros p3 α3. eapply restrict_covering. *)
+(*              - exact (Hf p2 (α2 ô α1 ô α0) p3 α3). *)
+(*              - exact c. } *)
+(*            pose (projEq1' (s Hc')) as g. specialize (g p2 id). apply g. *)
+(*            intros p3 α3. specialize (HB' p3 α3). *)
+(*            apply (restrict_covering (Hf p2 (α2 ô α1 ô α0) p3 α3)) in c. *)
+(*            assert ((fun (p4 : nat) (α4 : p3 ~> p4) => restrict_covering (Hf p3 (α3 ô α2 ô α1 ô α0) p4 α4) c) = *)
+(*                    (fun (p4 : nat) (α4 : p3 ~> p4) => Hc' p4 (id ô α4 ô (α3 ô id)))) as Hpi. *)
+(*            { apply funext_dep. intro p4. apply funext_dep. intro α4. apply proof_irr. } *)
+(*            apply (transport _ (covering_assumption c)) in HB'. simpl in HB'. *)
+(*            apply (transport (fun x => A p3 (α3 ô α2 ô α1 ô α0) x p3 id) Hpi) in HB'. *)
+(*            exact HB'. *)
+(*         -- specialize (HB' p2 id). *)
+(*            apply (transport _ (noncovering_assumption c)) in HB'. simpl in HB'. *)
+(*            exact HB'. *)
+(*       * intros p2 α2. unshelve refine (existTᵗ _ _ _ _ _). *)
+(*         (* Second direction of equivalence *) *)
+(*         -- intros p3 α3 HB. *)
+(*            match goal with *)
+(*            | |- ?GG => refine (sumbool_rect (fun X => GG) _ _ (covering_dec (f p3 (α3 ô α2 ô α1 ô α0)))) ; intro c *)
+(*            end. *)
+(*            ++ apply (transport _ (sym (covering_assumption c))). simpl. *)
+(*               assert (forall (p4 : nat) (α4 : p3 ~> p4), *)
+(*                          coversᵗ p4 (fun (p5 : nat) (α5 : p4 ~> p5) => f p5 (α5 ô α4 ô α3 ô α2 ô α1 ô α0)) p4 id) as Hc'. *)
+(*               { intros p4 α4. eapply restrict_covering. *)
+(*                 - exact (Hf p3 (α3 ô α2 ô α1 ô α0) p4 α4). *)
+(*                 - exact c. } *)
+(*               pose (projEq2' (s p3 (α3 ô α2 ô α1 ô α0) Hc')) as g. specialize (g p3 id). simpl in g. *)
+(*               assert ((fun (p2 : nat) (α1 : p3 ~> p2) => Hc' p2 (id ô α1 ô id)) = *)
+(*                       (fun (p4 : nat) (α4 : p3 ~> p4) => restrict_covering (Hf p3 (α3 ô α2 ô α1 ô α0) p4 α4) c)) as Hpi. *)
+(*               { apply funext_dep. intro p4. apply funext_dep. intro α4. apply proof_irr. } *)
+(*               refine (transport (fun x => A p3 (α3 ô α2 ô α1 ô α0) x _ _) Hpi _). apply g. *)
+(*               intros p4 α4. *)
+(*               exact (HB p4 α4). *)
+(*            ++ apply (transport _ (sym (noncovering_assumption c))). simpl. *)
+(*               exact (HB p3 id). *)
+(*         -- intros p3 α3. apply conjᵗ. *)
+(*            (* First identity of equivalence *) *)
+(*            ++ intros p4 α4. apply eq_is_eq. *)
+(*               apply funext_dep. intro p5. apply funext_dep. intro α5. *)
+(*               unfold fcomposeᵗ. apply funext_dep. intro b. *)
+(*               refine (sumbool_rect (fun X => _) _ _ (covering_dec (f p5 (α5 ô α4 ô α3 ô α2 ô α1 ô α0)))) ; intro c. *)
+(*               ** match goal with *)
+(*                  | |- ?GG1 _ = b p5 id => apply (transport (fun x => GG1 x = b p5 id) (sym (covering_assumption c))) *)
+(*                  end. simpl. etransitivity. refine (f_equal _ _). *)
+(*                  apply funext_dep. intro p6. apply funext_dep. intro α6. *)
+(*                  pose proof (sym (covering_assumption (restrict_covering (Hf p5 (α5 ô α4 ô α3 ô α2 ô α1 ô α0) p6 α6) c))). *)
+(*                  match goal with *)
+(*                  | |- transport ?X2 ?X3 (transport ?X4 ?X5 (sumbool_rect ?X6 ?X7 ?X8 _)) = ?X1 => *)
+(*                    apply (transport (fun x => transport X2 X3 (transport X4 X5 (sumbool_rect X6 X7 X8 x)) = X1) H) *)
+(*                  end. simpl. etransitivity. *)
+(*                  refine (f_equal _ _). eapply (sym (transport_trans _ _ _ _)). *)
+(*                  etransitivity. refine (f_equal _ _). apply transport_sym_trans. etransitivity. *)
+(*                  refine (sym (transport_trans _ _ _ _)). *)
+(*                  refine (transport_ap (fun x => (projEq2' *)
+(*                                                 (s p6 (id ô (id ô α6) ô (id ô α5 ô id) ô (id ô α4 ô id) ô α3 ô α2 ô α1 ô α0) x) p6 id *)
+(*                                                 (fun (p7 : nat) (α7 : p6 ~> p7) => b p7 (id ô α7 ô α6)))) _). *)
+(*                  simpl. *)
 
-
-(* (* unshelve refine (ex_intro _ _ _). specialize (H p id). specialize (H0 p id).  *) *)
-(*   (* - intros p0 α0. unfold cofᵗ in H, H0. unfold cofᵗ_obligation_1 in H, H0. simpl_comp_hyp. *) *)
-(* Admitted. *)
-
-
-
-
-Definition isEquiv (A B : Type) : Type :=
-  Σ (f : A -> B) (g : B -> A), (f o g = fun x => x) /\ (g o f = fun x => x).
-
-Notation "A ≅ B" := (isEquiv A B) (at level 65, left associativity).
-
-Run TemplateProgram (TC1 <-  Translate Fforall_correct_TC "fcompose" ;;
-                          TC2 <-  Translate TC1 "isEquiv" ;;
-                         tmDefinition "isEq_TC" TC2).
-
-Definition projEq1' {p : nat}
-           {A B : forall p0 : nat, p ~> p0 -> (fun (p1 : nat) (_ : p0 ~> p1) => forall p2 : nat, p1 ~> p2 -> Type) p0 id}
-  : isEquivᵗ p A B p id ->
-    (forall (p0 : nat) (α : p ~> p0),
-        (forall (p1 : nat) (α0 : p0 ~> p1),
-            A p1 (α0 ô α) p1 id) -> B p0 α p0 id
-    ).
-  intros [x _]. exact x.
-Defined.
-
-Definition projEq2' {p : nat} {A : forall p0 : nat, p ~> p0 -> (fun (p1 : nat) (_ : p0 ~> p1) => forall p2 : nat, p1 ~> p2 -> Type) p0 id}
-           {B : forall p0 : nat, p ~> p0 -> (fun (p1 : nat) (_ : p0 ~> p1) => forall p2 : nat, p1 ~> p2 -> Type) p0 id}
-  : isEquivᵗ p A B p id -> (forall (p0 : nat) (α : p ~> p0),
-                              (forall (p1 : nat) (α0 : p0 ~> p1), B p1 (α0 ô α) p1 id) ->
-                              A p0 α p0 id).
-  intros [x y]. destruct (y p id) as [z _]. exact z.
-Defined.
-
-Definition projEq3' {p : nat} {A : forall p0 : nat, p ~> p0 -> (fun (p1 : nat) (_ : p0 ~> p1) => forall p2 : nat, p1 ~> p2 -> Type) p0 id}
-           {B : forall p0 : nat, p ~> p0 -> (fun (p1 : nat) (_ : p0 ~> p1) => forall p2 : nat, p1 ~> p2 -> Type) p0 id}
-           (ie : isEquivᵗ p A B p id)
-           : (forall (p0 : 𝐂_obj) (α : p ~> p0),
-                 eqᵗ p0
-                     (fun (p1 : nat) (α0 : p0 ~> p1) (p2 : nat) (α1 : p1 ~> p2) =>
-                        (forall (p3 : nat) (α2 : p2 ~> p3),
-                            B p3 (α2 ô α1 ô α0 ô α) p3 id) ->
-                        B p2 (α1 ô α0 ô α) p2 id)
-                     (fun (p1 : nat) (α0 : p0 ~> p1) =>
-                        fcomposeᵗ p1
-                                  (fun (p2 : nat) (α1 : p1 ~> p2) =>
-                                     B p2 (α1 ô α0 ô α))
-                                  (fun (p2 : nat) (α1 : p1 ~> p2) =>
-                                     A p2 (α1 ô α0 ô α))
-                                  (fun (p2 : nat) (α1 : p1 ~> p2) =>
-                                     B p2 (α1 ô α0 ô α))
-                                  (fun (p2 : nat) (α1 : p1 ~> p2) => projEq1' ie p2 (α1 ô α0 ô α))
-                                  (fun (p2 : nat) (α1 : p1 ~> p2) => projEq2' ie p2 (α1 ô α0 ô α)))
-                     (fun (p1 : nat) (α0 : p0 ~> p1)
-                        (x : forall (p2 : nat) (α1 : p1 ~> p2),
-                            B p2 (α1 ô α0 ô α) p2 id) =>
-                        x p1 id)).
-  destruct ie as [x y]. simpl.
-  destruct (y p id) as [z t]. destruct (t p id) as [a b].
-  exact a.
-Defined.
-
-Definition projEq4' {p : nat} {A : forall p0 : nat, p ~> p0 -> (fun (p1 : nat) (_ : p0 ~> p1) => forall p2 : nat, p1 ~> p2 -> Type) p0 id}
-           {B : forall p0 : nat, p ~> p0 -> (fun (p1 : nat) (_ : p0 ~> p1) => forall p2 : nat, p1 ~> p2 -> Type) p0 id}
-           (ie : isEquivᵗ p A B p id)
-           : (forall (p0 : 𝐂_obj) (α : p ~> p0),
-                 eqᵗ p0
-                     (fun (p1 : nat) (α0 : p0 ~> p1) (p2 : nat) (α1 : p1 ~> p2) =>
-                        (forall (p3 : nat) (α2 : p2 ~> p3),
-                            A p3 (α2 ô α1 ô α0 ô α) p3 id) ->
-                        A p2 (α1 ô α0 ô α) p2 id)
-                     (fun (p1 : nat) (α0 : p0 ~> p1) =>
-                        fcomposeᵗ p1
-                                  (fun (p2 : nat) (α1 : p1 ~> p2) =>
-                                     A p2 (α1 ô α0 ô α))
-                                  (fun (p2 : nat) (α1 : p1 ~> p2) =>
-                                     B p2 (α1 ô α0 ô α))
-                                  (fun (p2 : nat) (α1 : p1 ~> p2) =>
-                                     A p2 (α1 ô α0 ô α))
-                                  (fun (p2 : nat) (α1 : p1 ~> p2) => projEq2' ie p2 (α1 ô α0 ô α))
-                                  (fun (p2 : nat) (α1 : p1 ~> p2) => projEq1' ie p2 (α1 ô α0 ô α)))
-                     (fun (p1 : nat) (α0 : p0 ~> p1)
-                        (x : forall (p2 : nat) (α1 : p1 ~> p2),
-                            A p2 (α1 ô α0 ô α) p2 id) =>
-                        x p1 id)).
-  destruct ie as [x y]. simpl. destruct (y p id) as [z t]. destruct (t p id) as [a b]. exact b.
-Defined.
-
-Definition covering_dec {p : nat} (f : face_lattice p) : {covering f} + {~ covering f}.
-Proof.
-  destruct f.
-  -  left. easy.
-  - right. easy.
-Defined.
-
-Theorem covering_assumption {p : nat} {f : face_lattice p} (c : covering f) : covering_dec f = left c.
-Proof.
-  unfold covering_dec. destruct f.
-  - apply f_equal. apply proof_irr.
-  - inversion c. 
-Qed.
-
-Theorem noncovering_assumption {p : nat} {f : face_lattice p} (c : ~ covering f) : covering_dec f = right c.
-Proof.
-  unfold covering_dec. destruct f.
-  - assert (False). apply c. easy. inversion H.
-  - apply f_equal. apply proof_irr.
-Qed.
-
-
-
-Run TemplateProgram (tImplementTC isEq_TC "ax9_TC" "ax9"
-                                  (forall (f : F) (Hf : natf f)
-                                     (A : covers f -> Type) (B : Type) (s : forall u : (covers f), A u ≅ B),
-                                      Σ (B' : Type) (s' : B' ≅ B), (forall u : (covers f), A u = B'))).
-Next Obligation.
-  unfold Fᵗ in f. unfold Fᵗ_obligation_1 in f.
-  unshelve refine (existTᵗ _ _ _ _ _).
-  (* Define B' *)
-  - intros p0 α0 p1 α1.
-    refine (sumbool_rect (fun X => _) _ _ (covering_dec (f p0 α0))) ; intro c.
-    + eapply (A p0 α0).
-      * intros p2 α2. unfold coversᵗ. unfold coversᵗ_obligation_1.
-        simpl_comp.
-        eapply restrict_covering.
-        -- specialize (Hf p0 α0 p2 α2). exact Hf.
-        -- exact c.
-      * exact α1.
-    + exact (B p0 α0 p1 α1).
-  - intros p0 α0. unshelve refine (existTᵗ _ _ _ _ _).
-    (* Prove B ≅ B' *)
-    + intros p1 α1. unfold isEquivᵗ. unshelve refine (existTᵗ _ _ _ _ _).
-      (* First direction of equivalence *)
-      * intros p2 α2 HB'.
-        refine (sumbool_rect (fun X => _) _ _ (covering_dec (f p2 (α2 ô α1 ô α0)))) ; intro c.
-        -- specialize (s p2 (α2 ô α1 ô α0)).
-           assert (forall (p3 : nat) (α3 : p2 ~> p3),
-                      coversᵗ p3 (fun (p4 : nat) (α4 : p3 ~> p4) => f p4 (α4 ô α3 ô α2 ô α1 ô α0)) p3 id) as Hc'.
-           { intros p3 α3. eapply restrict_covering.
-             - exact (Hf p2 (α2 ô α1 ô α0) p3 α3).
-             - exact c. }
-           pose (projEq1' (s Hc')) as g. specialize (g p2 id). apply g.
-           intros p3 α3. specialize (HB' p3 α3).
-           apply (restrict_covering (Hf p2 (α2 ô α1 ô α0) p3 α3)) in c.
-           assert ((fun (p4 : nat) (α4 : p3 ~> p4) => restrict_covering (Hf p3 (α3 ô α2 ô α1 ô α0) p4 α4) c) =
-                   (fun (p4 : nat) (α4 : p3 ~> p4) => Hc' p4 (id ô α4 ô (α3 ô id)))) as Hpi.
-           { apply funext_dep. intro p4. apply funext_dep. intro α4. apply proof_irr. }
-           apply (transport _ (covering_assumption c)) in HB'. simpl in HB'.
-           apply (transport (fun x => A p3 (α3 ô α2 ô α1 ô α0) x p3 id) Hpi) in HB'.
-           exact HB'.
-        -- specialize (HB' p2 id).
-           apply (transport _ (noncovering_assumption c)) in HB'. simpl in HB'.
-           exact HB'.
-      * intros p2 α2. unshelve refine (existTᵗ _ _ _ _ _).
-        (* Second direction of equivalence *)
-        -- intros p3 α3 HB.
-           match goal with
-           | |- ?GG => refine (sumbool_rect (fun X => GG) _ _ (covering_dec (f p3 (α3 ô α2 ô α1 ô α0)))) ; intro c
-           end.
-           ++ apply (transport _ (sym (covering_assumption c))). simpl.
-              assert (forall (p4 : nat) (α4 : p3 ~> p4),
-                         coversᵗ p4 (fun (p5 : nat) (α5 : p4 ~> p5) => f p5 (α5 ô α4 ô α3 ô α2 ô α1 ô α0)) p4 id) as Hc'.
-              { intros p4 α4. eapply restrict_covering.
-                - exact (Hf p3 (α3 ô α2 ô α1 ô α0) p4 α4).
-                - exact c. }
-              pose (projEq2' (s p3 (α3 ô α2 ô α1 ô α0) Hc')) as g. specialize (g p3 id). simpl in g.
-              assert ((fun (p2 : nat) (α1 : p3 ~> p2) => Hc' p2 (id ô α1 ô id)) =
-                      (fun (p4 : nat) (α4 : p3 ~> p4) => restrict_covering (Hf p3 (α3 ô α2 ô α1 ô α0) p4 α4) c)) as Hpi.
-              { apply funext_dep. intro p4. apply funext_dep. intro α4. apply proof_irr. }
-              refine (transport (fun x => A p3 (α3 ô α2 ô α1 ô α0) x _ _) Hpi _). apply g.
-              intros p4 α4.
-              exact (HB p4 α4).
-           ++ apply (transport _ (sym (noncovering_assumption c))). simpl.
-              exact (HB p3 id).
-        -- intros p3 α3. apply conjᵗ.
-           (* First identity of equivalence *)
-           ++ intros p4 α4. apply eq_is_eq.
-              apply funext_dep. intro p5. apply funext_dep. intro α5.
-              unfold fcomposeᵗ. apply funext_dep. intro b.
-              refine (sumbool_rect (fun X => _) _ _ (covering_dec (f p5 (α5 ô α4 ô α3 ô α2 ô α1 ô α0)))) ; intro c.
-              ** match goal with
-                 | |- ?GG1 _ = b p5 id => apply (transport (fun x => GG1 x = b p5 id) (sym (covering_assumption c)))
-                 end. simpl. etransitivity. refine (f_equal _ _).
-                 apply funext_dep. intro p6. apply funext_dep. intro α6.
-                 pose proof (sym (covering_assumption (restrict_covering (Hf p5 (α5 ô α4 ô α3 ô α2 ô α1 ô α0) p6 α6) c))).
-                 match goal with
-                 | |- transport ?X2 ?X3 (transport ?X4 ?X5 (sumbool_rect ?X6 ?X7 ?X8 _)) = ?X1 =>
-                   apply (transport (fun x => transport X2 X3 (transport X4 X5 (sumbool_rect X6 X7 X8 x)) = X1) H)
-                 end. simpl. etransitivity.
-                 refine (f_equal _ _). eapply (sym (transport_trans _ _ _ _)).
-                 etransitivity. refine (f_equal _ _). apply transport_sym_trans. etransitivity.
-                 refine (sym (transport_trans _ _ _ _)).
-                 refine (transport_ap (fun x => (projEq2'
-                                                (s p6 (id ô (id ô α6) ô (id ô α5 ô id) ô (id ô α4 ô id) ô α3 ô α2 ô α1 ô α0) x) p6 id
-                                                (fun (p7 : nat) (α7 : p6 ~> p7) => b p7 (id ô α7 ô α6)))) _).
-                 simpl.
-
-                 pose ((s p5 (α5 ô α4 ô α3 ô α2 ô α1 ô α0)
-                          (fun (p6 : nat) (α6 : p5 ~> p6) =>
-                             restrict_covering (Hf p5 (α5 ô α4 ô α3 ô α2 ô α1 ô α0) p6 α6) c))) as ss.
-                 pose proof (projEq3' ss p5 id) as Hs. inversion Hs. clear Hs.
-                 unfold fcomposeᵗ in H0. unfold ss in H0.
-                 apply apD10 with (x := p5) in H0. apply apD10 with (x := id) in H0.
-                 apply apD10 with (x := b) in H0. simpl_comp.
-                 (** * I think we need some kind of naturality for s, unless we somehow manage to call it with a higher forcing condition *)
-                 rewrite <- H0. apply f_equal. apply funext_dep. intro p6. apply funext_dep. intro α6. simpl_comp. 
+(*                  pose ((s p5 (α5 ô α4 ô α3 ô α2 ô α1 ô α0) *)
+(*                           (fun (p6 : nat) (α6 : p5 ~> p6) => *)
+(*                              restrict_covering (Hf p5 (α5 ô α4 ô α3 ô α2 ô α1 ô α0) p6 α6) c))) as ss. *)
+(*                  pose proof (projEq3' ss p5 id) as Hs. inversion Hs. clear Hs. *)
+(*                  unfold fcomposeᵗ in H0. unfold ss in H0. *)
+(*                  apply apD10 with (x := p5) in H0. apply apD10 with (x := id) in H0. *)
+(*                  apply apD10 with (x := b) in H0. simpl_comp. *)
+(*                  (** * I think we need some kind of naturality for s, unless we somehow manage to call it with a higher forcing condition *) *)
+(*                  rewrite <- H0. apply f_equal. apply funext_dep. intro p6. apply funext_dep. intro α6. simpl_comp.  *)
                  
-                 destruct admitok.
-              ** match goal with
-                 | |- ?GG1 _ = b p5 id => apply (transport (fun x => GG1 x = b p5 id) (sym (noncovering_assumption c)))
-                 end. simpl. etransitivity. refine (f_equal _ _).
-                 match goal with
-                 | |- ?GG1 _ = ?GG2 => apply (transport (fun x => GG1 x = GG2) (sym (noncovering_assumption c)))
-                 end. simpl. reflexivity. etransitivity.
-                 match goal with
-                 | |- transport ?P1 ?E1 (transport ?P2 ?E2 ?X) = ?Y =>
-                   exact (sym (transport_trans P1 E2 E1 X))
-                 end. etransitivity. refine (transport_sym_trans _ _ _). reflexivity.
-           (* Second identity of equivalence *)
-           ++ intros p4 α4. apply eq_is_eq.
-              apply funext_dep. intro p5. apply funext_dep. intro α5.
-              unfold fcomposeᵗ. apply funext_dep. intro b'.
-              refine (sumbool_rect (fun X => _) _ _ (covering_dec (f p5 (α5 ô α4 ô α3 ô α2 ô α1 ô α0)))) ; intro c.
-              ** match goal with
-                 | |- ?GG1 _ = b' p5 id => apply (transport (fun x => GG1 x = b' p5 id) (sym (covering_assumption c)))
-                 end. simpl. etransitivity. refine (f_equal _ _). refine (f_equal _ _). refine (f_equal _ _).
-                 apply funext_dep. intro p6. apply funext_dep. intro α6.
-                 pose proof (sym (covering_assumption (restrict_covering (Hf p5 (α5 ô α4 ô α3 ô α2 ô α1 ô α0) p6 α6) c))).
-                 match goal with
-                 | |- ?GG1 _ = ?GG2 => apply (transport (fun x => GG1 x = GG2) H)
-                 end. simpl. reflexivity. etransitivity. refine (f_equal _ _). refine (f_equal _ _).
-                 reflexivity.
-                 (** * Same here *)
-                 destruct admitok.
-              ** match goal with
-                 | |- ?GG1 _ = b' p5 id => apply (transport (fun x => GG1 x = b' p5 id) (sym (noncovering_assumption c)))
-                 end. simpl. etransitivity. refine (f_equal _ _).
-                 match goal with
-                 | |- ?GG1 _ = ?GG2 => apply (transport (fun x => GG1 x = GG2) (sym (noncovering_assumption c)))
-                 end. simpl. reflexivity. etransitivity.
-                 match goal with
-                 | |- transport ?P1 ?E1 (transport ?P2 ?E2 ?X) = ?Y =>
-                   exact (sym (transport_trans P1 E2 E1 X))
-                 end. etransitivity. refine (transport_trans_sym _ _ _).
-                 reflexivity.
-    (* Prove A u = B' *)
-    + intros p1 α1. intro Hφ. apply eq_is_eq.
-      apply funext_dep. intro p2. apply funext_dep. intro α2.
-      apply funext_dep. intro p3. apply funext. intro α3. simpl.
-      change (id ô (id ô α2 ô id) ô id ô (id ô α1 ô id) ô α0) with (α2 ô α1 ô α0). simpl_comp.
-      destruct (covering_dec (f p2 (α2 ô α1 ô α0))).
-      * assert ((fun (p5 : nat) (α4 : p2 ~> p5) => Hφ p5 (id ô α4 ô (id ô α2 ô id))) =
-                (fun (p4 : nat) (α4 : p2 ~> p4) => restrict_covering (Hf p2 (α2 ô α1 ô α0) p4 α4) c)) as Hpi.
-        { apply funext_dep. intro p4. apply funext_dep. intro α4. apply proof_irr. }
-        simpl. refine (f_equal (fun x => A p2 _ x _ _) _). exact Hpi.
-      * destruct (n (Hφ p2 α2)).
-Defined. 
+(*                  destruct admitok. *)
+(*               ** match goal with *)
+(*                  | |- ?GG1 _ = b p5 id => apply (transport (fun x => GG1 x = b p5 id) (sym (noncovering_assumption c))) *)
+(*                  end. simpl. etransitivity. refine (f_equal _ _). *)
+(*                  match goal with *)
+(*                  | |- ?GG1 _ = ?GG2 => apply (transport (fun x => GG1 x = GG2) (sym (noncovering_assumption c))) *)
+(*                  end. simpl. reflexivity. etransitivity. *)
+(*                  match goal with *)
+(*                  | |- transport ?P1 ?E1 (transport ?P2 ?E2 ?X) = ?Y => *)
+(*                    exact (sym (transport_trans P1 E2 E1 X)) *)
+(*                  end. etransitivity. refine (transport_sym_trans _ _ _). reflexivity. *)
+(*            (* Second identity of equivalence *) *)
+(*            ++ intros p4 α4. apply eq_is_eq. *)
+(*               apply funext_dep. intro p5. apply funext_dep. intro α5. *)
+(*               unfold fcomposeᵗ. apply funext_dep. intro b'. *)
+(*               refine (sumbool_rect (fun X => _) _ _ (covering_dec (f p5 (α5 ô α4 ô α3 ô α2 ô α1 ô α0)))) ; intro c. *)
+(*               ** match goal with *)
+(*                  | |- ?GG1 _ = b' p5 id => apply (transport (fun x => GG1 x = b' p5 id) (sym (covering_assumption c))) *)
+(*                  end. simpl. etransitivity. refine (f_equal _ _). refine (f_equal _ _). refine (f_equal _ _). *)
+(*                  apply funext_dep. intro p6. apply funext_dep. intro α6. *)
+(*                  pose proof (sym (covering_assumption (restrict_covering (Hf p5 (α5 ô α4 ô α3 ô α2 ô α1 ô α0) p6 α6) c))). *)
+(*                  match goal with *)
+(*                  | |- ?GG1 _ = ?GG2 => apply (transport (fun x => GG1 x = GG2) H) *)
+(*                  end. simpl. reflexivity. etransitivity. refine (f_equal _ _). refine (f_equal _ _). *)
+(*                  reflexivity. *)
+(*                  (** * Same here *) *)
+(*                  destruct admitok. *)
+(*               ** match goal with *)
+(*                  | |- ?GG1 _ = b' p5 id => apply (transport (fun x => GG1 x = b' p5 id) (sym (noncovering_assumption c))) *)
+(*                  end. simpl. etransitivity. refine (f_equal _ _). *)
+(*                  match goal with *)
+(*                  | |- ?GG1 _ = ?GG2 => apply (transport (fun x => GG1 x = GG2) (sym (noncovering_assumption c))) *)
+(*                  end. simpl. reflexivity. etransitivity. *)
+(*                  match goal with *)
+(*                  | |- transport ?P1 ?E1 (transport ?P2 ?E2 ?X) = ?Y => *)
+(*                    exact (sym (transport_trans P1 E2 E1 X)) *)
+(*                  end. etransitivity. refine (transport_trans_sym _ _ _). *)
+(*                  reflexivity. *)
+(*     (* Prove A u = B' *) *)
+(*     + intros p1 α1. intro Hφ. apply eq_is_eq. *)
+(*       apply funext_dep. intro p2. apply funext_dep. intro α2. *)
+(*       apply funext_dep. intro p3. apply funext. intro α3. simpl. *)
+(*       change (id ô (id ô α2 ô id) ô id ô (id ô α1 ô id) ô α0) with (α2 ô α1 ô α0). simpl_comp. *)
+(*       destruct (covering_dec (f p2 (α2 ô α1 ô α0))). *)
+(*       * assert ((fun (p5 : nat) (α4 : p2 ~> p5) => Hφ p5 (id ô α4 ô (id ô α2 ô id))) = *)
+(*                 (fun (p4 : nat) (α4 : p2 ~> p4) => restrict_covering (Hf p2 (α2 ô α1 ô α0) p4 α4) c)) as Hpi. *)
+(*         { apply funext_dep. intro p4. apply funext_dep. intro α4. apply proof_irr. } *)
+(*         simpl. refine (f_equal (fun x => A p2 _ x _ _) _). exact Hpi. *)
+(*       * destruct (n (Hφ p2 α2)). *)
+(* Defined.  *)
