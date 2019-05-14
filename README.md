@@ -1,7 +1,7 @@
 # cubical_forcing
 
 This compiles using the `coq-8.8` branch of coq, and the up `update-translation-plugin` of metacoq. Note that the latter does not compile completely, but a 
-  # make translations
+  `make translations`
 compiles enough for our purpose.
 
 Detailed installation instruction:
@@ -39,16 +39,16 @@ by the following
    ```
   $(COQBIN)/coq_makefile -f _CoqProject -o Makefile.coq
    ```
-We can now build metacoq:
+  - We can now build metacoq:
   ```
   make translations
   ```
-This command should fail in some file in `translations`. The important part is that the file `translation_utils` gets built.
+This command should fail in some file in `translations/`. The important part is that the file `translation_utils` gets built.
   - You can now download and build this repository:
   ```
   cd ..
   git clone https://github.com/MaximeLucasSky/cubical_forcing.git
-  cd cubical_forcing
+  cd cubical_forcing/
   ../coq/bin/coq_makefile -f _CoqProject -o Makefile
   make
   ```
